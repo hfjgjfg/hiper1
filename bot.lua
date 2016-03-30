@@ -5,7 +5,7 @@ URL = require('socket.url')
 JSON = require('dkjson')
 HTTPS = require('ssl.https')
 ----config----
-local bot_api_key = "167084155:AAFYIiigdFautLhEiEI7Zp33tswJBBEOP04"
+local bot_api_key = "215892924:AAEyO9m4A_vHP3uqm_1dt2jDya24puGC3U8"
 local BASE_URL = "https://api.telegram.org/bot"..bot_api_key
 local BASE_FOLDER = "hiper"
 local start = [[
@@ -253,6 +253,11 @@ function msg_processor(msg)
 	local matches = { string.match(msg.text, "^/bold (.*)") }
 	local text = '*'..matches[1]..'*'
   sendMessage(msg.chat.id, text, true, false, true)
+  
+  elseif msg.text:match("^/echo (.*)") then
+	local matches = { string.match(msg.text, "^/echo (.*)") }
+	local text = '`'..matches[1]..'`'
+  sendMessage(msg.chat.id, text, true, false, true)
 
   elseif msg.text:match("^/boldch (.*) (.*)") then
 	local matches = { string.match(msg.text, "^/boldch (.*) (.*)") }
@@ -297,6 +302,53 @@ elseif msg.text:match("^/[sS]tart") or msg.text:match("^/[Hh]elp") then
  sendMessage(msg.chat.id, start, true, false, true)
 
 return end
+local BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
+
+local function get_weather(location)
+  print("Finding weather in ", location)
+  location = string.gsub(location," ","+")
+  local url = BASE_URL
+  url = url..'?q='..location
+  url = url..'&units=metric'
+  url = url..'&appid=973e8a21e358ee9d30b47528b43a8746'
+
+  local b, c, h = http.request(url)
+  if c ~= 200 then return nil end
+
+  local weather = json:decode(b)
+  local city = weather.name
+  local country = weather.sys.country
+  local temp = 'دمای امروز در  '..city
+    ..'IR'
+    ..'\n'..weather.main.temp..'درجه سانتی گراد'
+  local conditions = 'شرایط فعلی هوا: \n'
+    .. weather.weather[1].description
+
+  if weather.weather[1].main == 'صاف' then
+    conditions = conditions .. '☀️'
+  elseif weather.weather[1].main == 'clouds' then
+    conditions = conditions .. '⛅️🌥'
+  elseif weather.weather[1].main == 'بارانی' then
+    conditions = conditions .. '🌧🌨'
+  elseif weather.weather[1].main == 'طوفانی' then
+    conditions = conditions .. '💨🌪🌊'
+  end
+
+  return temp .. '\n' .. conditions
+end
+
+local function run(msg, matches)
+  local city = 'Madrid,ES'
+
+  if matches[1] ~= 'weather' then
+    city = matches[1]
+  end
+  local text = get_weather(city)
+  if not text then
+    text = 'Can\'t get weather from that city.'
+  end
+  return text
+end
 
 end
 bot_run() -- Run main function
