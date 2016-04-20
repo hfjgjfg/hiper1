@@ -10,7 +10,7 @@ local BASE_URL = "https://api.telegram.org/bot"..bot_api_key
 local BASE_FOLDER = "hiper"
 local start = [[
 سلام 
-به ربات هایپر تیم کرول خوش اومدین در اینجا میتونید متن رو کج درشت یا کم رنگ کنید
+به هایپر لینک تیم کینگ خوش امدید
 همچنین قابلیت تبدیل عکس به استیکر و استیکر به عکس هم وجود داره 
 
 `/bold text`
@@ -50,7 +50,7 @@ _just send a sticker_
 *photo to sticker*
 _just send a photo_
 
-admin:سید محمد خشنوا
+admin:محمد حاصل مهری
 ]] 
 
 -------
